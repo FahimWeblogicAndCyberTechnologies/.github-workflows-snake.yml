@@ -2,12 +2,15 @@ name: Snake Game Contribution
 
 on:
   schedule:
-    - cron: "0 0 * * *"    # Runs every day at midnight
-  workflow_dispatch:       # Allows manual trigger
+    - cron: "0 0 * * *"
+  workflow_dispatch:
 
 jobs:
   build:
     runs-on: ubuntu-latest
+
+    permissions:
+      contents: write
 
     steps:
       - name: Checkout repository
@@ -17,11 +20,13 @@ jobs:
         uses: Platane/snk@v3
         with:
           github_user_name: ${{ github.repository_owner }}
-          svg_out: dist/github-snake.svg
-          gif_out: dist/github-snake.gif
+          outputs: |
+            dist/github-contribution-grid-snake.svg
+            dist/github-contribution-grid-snake-dark.svg?palette=github-dark
 
-      - name: Deploy to GitHub Pages
-        uses: peaceiris/actions-gh-pages@v4   # Updated to v4
+      - name: Deploy to output branch
+        uses: peaceiris/actions-gh-pages@v3
         with:
           github_token: ${{ secrets.GITHUB_TOKEN }}
-          publish_dir: ./dist
+          publish_dir: dist
+          publish_branch: output
