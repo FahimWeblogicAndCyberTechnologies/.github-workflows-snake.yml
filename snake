@@ -4,20 +4,29 @@ on:
   schedule:
     - cron: "0 0 * * *"   # runs every day
   workflow_dispatch:       # allows manual run
+  push:
+    branches:
+      - main               # run when you push updates
 
 jobs:
   build:
     runs-on: ubuntu-latest
 
     steps:
+      # ✅ REQUIRED: checkout repo
+      - name: Checkout repository
+        uses: actions/checkout@v3
+
+      # 🐍 Generate snake animation
       - name: Generate Snake
         uses: Platane/snk@v3
         with:
-          github_user_name: fahimweblogicandcybertechnologies
+          github_user_name: FahimWeblogicAndCyberTechnologies
           outputs: |
             dist/github-contribution-grid-snake.svg
             dist/github-contribution-grid-snake-dark.svg?palette=github-dark
 
+      # 🚀 Push to output branch
       - name: Push Snake to Output Branch
         uses: crazy-max/ghaction-github-pages@v3
         with:
